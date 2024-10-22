@@ -65,11 +65,14 @@ public class DrawingController {
 		return tool;
 	}
 
-	public void moveSelectedShapes(Point movement) {
+	public void moveSelectedShapes(Point movement, boolean needRecord) {
 		if (!selection.isEmpty()) {
 			DrawAction move = new MoveAction(selection, movement);
-			undoManager.addAction(move);
-			move.execute();
+			if (needRecord) {
+				undoManager.addAction(move);
+			} else {
+				move.execute();
+			}
 		}
 	}
 
@@ -77,13 +80,6 @@ public class DrawingController {
 		drawing = new Drawing(size);
 		if (gui != null) {
 			gui.updateDrawing();
-		}
-	}
-
-	public void recordMovement(Point movement) {
-		if (!selection.isEmpty()) {
-			DrawAction move = new MoveAction(selection, movement);
-			undoManager.addAction(move);
 		}
 	}
 

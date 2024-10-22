@@ -55,18 +55,15 @@ public class MouseListener extends MouseAdapter {
 	}
 
 	public void mouseDragged(MouseEvent m) {
-
-		mouseDelta.x = m.getPoint().x - lastPos.x;
 		mouseDelta.y = m.getPoint().y - lastPos.y;
+		mouseDelta.x = m.getPoint().x - lastPos.x;
 
 		if (isDrawing && (newShape != null)) {
 			newShape.setPoint2(lastPos);
 		}
 
 		if (c.getTool() == Tool.SELECT) {
-			for (Shape s : c.getSelection()) {
-				s.move(mouseDelta.x, mouseDelta.y);
-			}
+			c.moveSelectedShapes(new Point(mouseDelta.x, mouseDelta.y), false);
 		}
 
 		c.getDrawing().repaint();
@@ -152,9 +149,8 @@ public class MouseListener extends MouseAdapter {
 					- startPos.y);
 
 			if ((total.x != 0) || (total.y != 0)) {
-				c.recordMovement(total);
+				c.moveSelectedShapes(total, true);
 			}
-
 		}
 	}
 
