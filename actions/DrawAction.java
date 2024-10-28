@@ -15,6 +15,8 @@ public interface DrawAction {
 	 */
 	public void execute();
 
+	public DrawAction mergeActions(DrawAction other);
+
 	/**
 	 * Returns a brief explanation of the action. Can be used for example to
 	 * provide action descriptions for a GUI such as "undo adding a section".

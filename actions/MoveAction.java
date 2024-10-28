@@ -36,6 +36,15 @@ public class MoveAction implements DrawAction {
 		}
 	}
 
+	@Override
+	public DrawAction mergeActions(DrawAction other) {
+		if(other instanceof MoveAction) {
+			return this;
+		}
+
+		return null;
+	}
+
 	public String getDescription() {
 		return null;
 	}

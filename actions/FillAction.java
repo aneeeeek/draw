@@ -32,6 +32,11 @@ public class FillAction implements DrawAction {
 		}
 	}
 
+	@Override
+	public DrawAction mergeActions(DrawAction other) {
+		return null;
+	}
+
 	public String getDescription() {
 		return null;
 	}

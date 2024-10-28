@@ -149,7 +149,7 @@ public class MouseListener extends MouseAdapter {
 					- startPos.y);
 
 			if ((total.x != 0) || (total.y != 0)) {
-				c.moveSelectedShapes(total, true);
+				c.moveSelectedShapes(total,true);
 			}
 		}
 	}

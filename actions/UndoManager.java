@@ -37,8 +37,24 @@ public class UndoManager {
 	 *            the UndoableAction to be added.
 	 */
 	public void addAction(DrawAction action) {
+
 		this.redoStack.clear();
-		this.undoStack.push(action);
+		if (!undoStack.isEmpty()) {
+			DrawAction mergeResult = action.mergeActions(undoStack.peek());
+
+			if (mergeResult != null) {
+				this.undoStack.pop();
+				this.undoStack.push(mergeResult);
+			}
+			else {
+				this.undoStack.push(action);
+			}
+		}
+		else {
+			this.undoStack.push(action);
+		}
+		//System.out.println(undoStack.size());
+		//System.out.println(undoStack.peek() instanceof MoveAction);
 	}
 
 	/**

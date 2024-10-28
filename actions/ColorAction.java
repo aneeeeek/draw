@@ -34,6 +34,11 @@ public class ColorAction implements DrawAction {
 		shape.setColor(newColor);
 	}
 
+	@Override
+	public DrawAction mergeActions(DrawAction other) {
+		return null;
+	}
+
 	public String getDescription() {
 		return null;
 	}
