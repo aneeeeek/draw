@@ -40,7 +40,7 @@ public class MenuListener implements ActionListener {
 		}
 
 		else if (cmd.equals("Save")) {
-			controller.getDrawing().listShapes();
+			controller.getDrawingState().listShapes();
 		}
 
 		else if (cmd.equals("Undo")) {
@@ -58,7 +58,7 @@ public class MenuListener implements ActionListener {
 
 		else if (cmd.equals("Clear selection")) {
 			controller.getSelection().empty();
-			controller.getDrawing().repaint();
+			controller.getDrawingState().notifyListeners();
 		}
 
 		else if (cmd.equals("Delete")) {

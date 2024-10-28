@@ -169,7 +169,7 @@ public class ToolBox extends JToolBar implements ActionListener,
 		}
 		else if (!source.equals(colorbutton)) {
 			c.getSelection().empty();
-			c.getDrawing().repaint();
+			c.getDrawingState().repaint();
 		}
 
 		if (source.equals(circle)) {
@@ -220,7 +220,7 @@ public class ToolBox extends JToolBar implements ActionListener,
 		}
 
 		c.toggleFilled();
-		c.getDrawing().repaint();
+		c.getDrawingState().notifyListeners();
 
 	}
 

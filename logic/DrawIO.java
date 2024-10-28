@@ -14,6 +14,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import gui.DrawingView;
+
 import shapes.Circle;
 import shapes.Line;
 import shapes.Rectangle;
@@ -21,6 +23,7 @@ import shapes.Shape;
 import shapes.Text;
 
 public class DrawIO {
+	DrawingView view;
 
 	public void export(File f, DrawingController c) {
 		try {
@@ -47,6 +50,8 @@ public class DrawIO {
 			String str;
 
 			Point p = getPoint(in.readLine());
+
+			// TODO добавить событие на открытие нового файла
 			c.newDrawing(new Dimension(p.x, p.y));
 
 			while ((str = in.readLine()) != null) {

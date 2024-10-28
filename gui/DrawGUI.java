@@ -11,7 +11,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import logic.Drawing;
+import logic.DrawingStateNotifier;
 import logic.DrawingController;
 
 /**
@@ -38,16 +38,15 @@ public class DrawGUI extends JFrame {
 			super(new GridBagLayout());
 		}
 
-		public void setDrawing(Drawing d) {
+		public void setDrawingPanel(DrawingPanel panel) {
 			this.removeAll();
-			this.add(d);
+			this.add(panel);
 			mouse = new MouseListener(controller, tools);
-			d.addMouseListener(mouse);
-			d.addMouseMotionListener(mouse);
-			setPreferredSize(d.getPreferredSize());
+			panel.addMouseListener(mouse);
+			panel.addMouseMotionListener(mouse);
+			setPreferredSize(panel.getPreferredSize());
 			pack();
 		}
-
 	}
 
 	public class StatusBar extends JLabel {
@@ -65,7 +64,12 @@ public class DrawGUI extends JFrame {
 		}
 	}
 
-	private DrawingController controller;
+	private final DrawingController controller;
+	private DrawingStateNotifier stateNotifier;
+
+	// TODO где должен храниться panel?
+	private DrawingPanel panel;
+
 	private DrawingContainer drawingContainer;
 	private MouseListener mouse;
 	private ToolBox tools;
@@ -93,7 +97,8 @@ public class DrawGUI extends JFrame {
 		drawingContainer = new DrawingContainer();
 		scrollpane = new JScrollPane(drawingContainer);
 
-		controller = new DrawingController(this);
+		stateNotifier = new DrawingStateNotifier();
+		controller = new DrawingController(stateNotifier, this);
 		tools = new ToolBox(controller);
 		controller.newDrawing(new Dimension(500, 380));
 
@@ -118,7 +123,7 @@ public class DrawGUI extends JFrame {
 	 */
 	public void updateDrawing() {
 
-		drawingContainer.setDrawing(controller.getDrawing());
+		drawingContainer.setDrawingPanel(controller.getDrawing());
 		scrollpane.setPreferredSize(new Dimension(drawingContainer
 				.getPreferredSize().width + 100, drawingContainer
 				.getPreferredSize().height + 100));

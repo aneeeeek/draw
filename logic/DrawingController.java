@@ -1,6 +1,7 @@
 package logic;
 
 import gui.DrawGUI;
+import gui.DrawingPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,14 +18,15 @@ import actions.UndoManager;
 
 public class DrawingController {
 
-	private Drawing drawing;
+	private DrawingStateNotifier drawingStateNotifier;
+	private DrawingPanel panel;
 	private UndoManager undoManager;
 	private Selection selection;
 	private DrawGUI gui;
 	private Tool tool;
 
-	public DrawingController(DrawGUI g) {
-		drawing = null;
+	public DrawingController(DrawingStateNotifier stateNotifier, DrawGUI g) {
+		drawingStateNotifier = stateNotifier;
 		undoManager = new UndoManager();
 		selection = new Selection();
 		gui = g;
@@ -32,7 +34,7 @@ public class DrawingController {
 	}
 
 	public void addShape(Shape s) {
-		DrawAction add = new AddAction(drawing, s);
+		DrawAction add = new AddAction(drawingStateNotifier, s);
 		add.execute();
 		undoManager.addAction(add);
 
@@ -47,14 +49,10 @@ public class DrawingController {
 	}
 
 	public void deleteSelectedShapes() {
-		DrawAction del = new DeleteAction(drawing, selection);
+		DrawAction del = new DeleteAction(drawingStateNotifier, selection);
 		del.execute();
 		undoManager.addAction(del);
-		drawing.repaint();
-	}
-
-	public Drawing getDrawing() {
-		return drawing;
+		drawingStateNotifier.notifyListeners();
 	}
 
 	public Selection getSelection() {
@@ -76,8 +74,14 @@ public class DrawingController {
 		}
 	}
 
-	public void newDrawing(Dimension size) {
-		drawing = new Drawing(size);
+	// TODO в будущем нужно убать, сейчас нужен для совместимости
+	public DrawingStateNotifier getDrawingState() {
+		return drawingStateNotifier;
+	}
+
+	// TODO не должен создавать новый Drawing
+	public void newDrawingPanel() {
+		drawingStateNotifier.reset();
 		if (gui != null) {
 			gui.updateDrawing();
 		}
@@ -87,16 +91,15 @@ public class DrawingController {
 		if (this.undoManager.canRedo()) {
 			this.undoManager.redo();
 		}
-		drawing.repaint();
+		drawingStateNotifier.notifyListeners();
 	}
 
 	public void selectAll() {
 		selection.empty();
-		for (Shape sh : drawing) {
+		for (Shape sh : drawingStateNotifier) {
 			selection.add(sh);
 		}
-		drawing.repaint();
-
+		drawingStateNotifier.notifyListeners();
 	}
 
 	public void setTool(Tool t) {
@@ -113,6 +116,6 @@ public class DrawingController {
 		if (this.undoManager.canUndo()) {
 			this.undoManager.undo();
 		}
-		drawing.repaint();
+		drawingStateNotifier.notifyListeners();
 	}
 }

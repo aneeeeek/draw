@@ -1,6 +1,6 @@
 package actions;
 
-import logic.Drawing;
+import logic.ModifyVectorDrawing;
 import logic.Selection;
 import shapes.Shape;
 
@@ -10,7 +10,7 @@ import shapes.Shape;
  */
 public class DeleteAction implements DrawAction {
 
-	Drawing d;
+	ModifyVectorDrawing d;
 	Selection selection;
 
 	int position;
@@ -24,7 +24,7 @@ public class DeleteAction implements DrawAction {
 	 * @param selection
 	 *            the shape to be added.
 	 */
-	public DeleteAction(Drawing drawing, Selection selection) {
+	public DeleteAction(ModifyVectorDrawing drawing, Selection selection) {
 		// The selection need to be hard-copied because the selection behind the
 		// reference will change while editing the drawing.
 		this.selection = selection.clone();

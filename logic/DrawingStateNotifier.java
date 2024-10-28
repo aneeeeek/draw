@@ -1,41 +1,21 @@
 package logic;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-
 import shapes.Shape;
 
-public class Drawing extends JPanel implements Iterable<Shape> {
 
-	private static final long serialVersionUID = 0;
+public class DrawingStateNotifier extends DrawingNotifier implements ReadOnlyVectorDrawing, ModifyVectorDrawing {
 
 	private ArrayList<Shape> shapes;
 
-	public Drawing(Dimension size) {
+	public DrawingStateNotifier() {
 		shapes = new ArrayList<Shape>(0);
-
-		this.setPreferredSize(size);
-		setBorder(BorderFactory.createLineBorder(Color.black));
-		setBackground(Color.WHITE);
 	}
 
-	public BufferedImage getImage() {
-
-		BufferedImage bi = new BufferedImage(getPreferredSize().width,
-				getPreferredSize().height, BufferedImage.TYPE_INT_RGB);
-		Graphics g = bi.createGraphics();
-		this.print(g);
-		return bi;
-	}
-
+	@Override
 	public Shape getShapeAt(Point p) {
 		int index = shapes.size() - 1;
 		while (index >= 0) {
@@ -46,9 +26,14 @@ public class Drawing extends JPanel implements Iterable<Shape> {
 			index--;
 		}
 		return null;
-
 	}
 
+	@Override
+	public int nShapes() {
+		return shapes.size();
+	}
+
+	@Override
 	public void insertShape(Shape s) {
 		shapes.add(s);
 	}
@@ -58,6 +43,7 @@ public class Drawing extends JPanel implements Iterable<Shape> {
 		return shapes.iterator();
 	}
 
+	@Override
 	public void listShapes() {
 		System.out.println("---");
 		for (Shape s : shapes) {
@@ -66,6 +52,7 @@ public class Drawing extends JPanel implements Iterable<Shape> {
 		System.out.println("---");
 	}
 
+	@Override
 	public void lower(Shape s) {
 		int index = shapes.indexOf(s);
 		if (index < shapes.size() - 1) {
@@ -74,18 +61,7 @@ public class Drawing extends JPanel implements Iterable<Shape> {
 		}
 	}
 
-	public int nShapes() {
-		return shapes.size();
-	}
-
-	public void paintComponent(Graphics g) {
-
-		super.paintComponent(g);
-		for (Shape s : shapes) {
-			s.draw(g);
-		}
-	}
-
+	@Override
 	public void raise(Shape s) {
 		int index = shapes.indexOf(s);
 		if (index > 0) {
@@ -94,8 +70,13 @@ public class Drawing extends JPanel implements Iterable<Shape> {
 		}
 	}
 
+	@Override
 	public void removeShape(Shape s) {
 		shapes.remove(s);
 	}
 
+	public void reset() {
+		removeAllListeners();
+		shapes.clear();
+	}
 }

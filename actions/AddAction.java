@@ -1,6 +1,6 @@
 package actions;
 
-import logic.Drawing;
+import logic.ModifyVectorDrawing;
 import shapes.Shape;
 
 /**
@@ -9,7 +9,7 @@ import shapes.Shape;
  */
 public class AddAction implements DrawAction {
 
-	Drawing d;
+	ModifyVectorDrawing d;
 	Shape s;
 
 	/**
@@ -20,7 +20,7 @@ public class AddAction implements DrawAction {
 	 * @param sh
 	 *            the shape to be added.
 	 */
-	public AddAction(Drawing dr, Shape sh) {
+	public AddAction(ModifyVectorDrawing dr, Shape sh) {
 		this.d = dr;
 		this.s = sh;
 	}
