@@ -40,7 +40,7 @@ public class UndoManager {
 
 		this.redoStack.clear();
 		if (!undoStack.isEmpty()) {
-			DrawAction mergeResult = action.mergeActions(undoStack.peek());
+			DrawAction mergeResult = getLastAction().getIsNeedMerge() ? getLastAction().mergeActions(action) : null;
 
 			if (mergeResult != null) {
 				this.undoStack.pop();
@@ -94,6 +94,10 @@ public class UndoManager {
 		DrawAction action = this.undoStack.pop();
 		action.undo();
 		this.redoStack.push(action);
+	}
+
+	public DrawAction getLastAction(){
+		return undoStack.peek();
 	}
 
 }

@@ -18,6 +18,11 @@ import actions.UndoManager;
 public class DrawingController {
 
 	private Drawing drawing;
+
+	public UndoManager getUndoManager() {
+		return undoManager;
+	}
+
 	private UndoManager undoManager;
 	private Selection selection;
 	private DrawGUI gui;
@@ -65,14 +70,11 @@ public class DrawingController {
 		return tool;
 	}
 
-	public void moveSelectedShapes(Point movement, boolean needRecord) {
+	public void moveSelectedShapes(Point movement) {
 		if (!selection.isEmpty()) {
 			DrawAction move = new MoveAction(selection, movement);
-			if (needRecord) {
-				undoManager.addAction(move);
-			} else {
-				move.execute();
-			}
+			move.execute();
+			undoManager.addAction(move);
 		}
 	}
 

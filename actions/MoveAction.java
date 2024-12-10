@@ -13,6 +13,7 @@ public class MoveAction implements DrawAction {
 
 	Selection selected;
 	Point movement;
+	boolean isNeedMerge = true;
 
 	/**
 	 * Creates a MoveAction that moves all Shapes in the given Selection in the
@@ -38,11 +39,23 @@ public class MoveAction implements DrawAction {
 
 	@Override
 	public DrawAction mergeActions(DrawAction other) {
-		if(other instanceof MoveAction) {
+		if(other instanceof MoveAction move) {
+			this.movement.x += move.movement.x;
+			this.movement.y += move.movement.y;
 			return this;
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean getIsNeedMerge() {
+		return isNeedMerge;
+	}
+
+	@Override
+	public void disableMerge() {
+		this.isNeedMerge = false;
 	}
 
 	public String getDescription() {
