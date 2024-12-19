@@ -23,13 +23,13 @@ import shapes.Text;
 public class DrawIO {
 
 	public void export(File f, DrawingController c) {
-		try {
-			c.getSelection().empty();
-			BufferedImage bi = c.getDrawing().getImage(); // retrieve image
-			ImageIO.write(bi, "png", f);
-		}
-		catch (IOException e) {
-		}
+//		try {
+//			c.getSelection().empty();
+//			//BufferedImage bi = c.getDrawing().getImage(); // retrieve image
+//			//ImageIO.write(bi, "png", f);
+//		}
+//		catch (IOException e) {
+//		}
 	}
 
 	public Point getPoint(String str) {
@@ -116,8 +116,8 @@ public class DrawIO {
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(f));
 
-			out.write(d.getPreferredSize().width + ","
-					+ d.getPreferredSize().height + "\n");
+			out.write(d.getCanvasSize().width + ","
+					+ d.getCanvasSize().height + "\n");
 
 			for (Shape s : c.getDrawing()) {
 				out.write(s.toString() + "\n");

@@ -13,28 +13,31 @@ import javax.swing.JPanel;
 
 import shapes.Shape;
 
-public class Drawing extends JPanel implements Iterable<Shape> {
+public class Drawing implements Iterable<Shape> {
 
 	private static final long serialVersionUID = 0;
 
 	private ArrayList<Shape> shapes;
 
+	public Dimension getCanvasSize() {
+		return canvasSize;
+	}
+
+	private Dimension canvasSize;
+
 	public Drawing(Dimension size) {
-		shapes = new ArrayList<Shape>(0);
-
-		this.setPreferredSize(size);
-		setBorder(BorderFactory.createLineBorder(Color.black));
-		setBackground(Color.WHITE);
+		shapes = new ArrayList<>(0);
+		canvasSize = size;
 	}
 
-	public BufferedImage getImage() {
-
-		BufferedImage bi = new BufferedImage(getPreferredSize().width,
-				getPreferredSize().height, BufferedImage.TYPE_INT_RGB);
-		Graphics g = bi.createGraphics();
-		this.print(g);
-		return bi;
-	}
+//	public BufferedImage getImage() {
+//
+//		BufferedImage bi = new BufferedImage(getPreferredSize().width,
+//				getPreferredSize().height, BufferedImage.TYPE_INT_RGB);
+//		Graphics g = bi.createGraphics();
+//		this.print(g);
+//		return bi;
+//	}
 
 	public Shape getShapeAt(Point p) {
 		int index = shapes.size() - 1;
@@ -76,14 +79,6 @@ public class Drawing extends JPanel implements Iterable<Shape> {
 
 	public int nShapes() {
 		return shapes.size();
-	}
-
-	public void paintComponent(Graphics g) {
-
-		super.paintComponent(g);
-		for (Shape s : shapes) {
-			s.draw(g);
-		}
 	}
 
 	public void raise(Shape s) {

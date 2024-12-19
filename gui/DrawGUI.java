@@ -2,16 +2,12 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import logic.Drawing;
 import logic.DrawingController;
 
 /**
@@ -23,51 +19,24 @@ import logic.DrawingController;
 
 public class DrawGUI extends JFrame {
 
-	/**
-	 * A simple container that contains a Drawing instance and keeps it
-	 * centered.
-	 * 
-	 * @author Alex Lagerstedt
-	 * 
-	 */
-	private class DrawingContainer extends JPanel {
 
-		private static final long serialVersionUID = 0;
-
-		public DrawingContainer() {
-			super(new GridBagLayout());
-		}
-
-		public void setDrawing(Drawing d) {
-			this.removeAll();
-			this.add(d);
-			mouse = new MouseListener(controller, tools);
-			d.addMouseListener(mouse);
-			d.addMouseMotionListener(mouse);
-			setPreferredSize(d.getPreferredSize());
-			pack();
-		}
-
-	}
-
-	public class StatusBar extends JLabel {
-
-		private static final long serialVersionUID = 0;
-
-		public StatusBar() {
-			super();
-			super.setPreferredSize(new Dimension(100, 16));
-			setMessage("Ready");
-		}
-
-		public void setMessage(String message) {
-			setText(" " + message);
-		}
-	}
+//	public class StatusBar extends JLabel {
+//
+//		private static final long serialVersionUID = 0;
+//
+//		public StatusBar() {
+//			super();
+//			super.setPreferredSize(new Dimension(100, 16));
+//			setMessage("Ready");
+//		}
+//
+//		public void setMessage(String message) {
+//			setText(" " + message);
+//		}
+//	}
 
 	private DrawingController controller;
-	private DrawingContainer drawingContainer;
-	private MouseListener mouse;
+	private DrawingPanel drawingPanel;
 	private ToolBox tools;
 	private JScrollPane scrollpane;
 
@@ -90,11 +59,16 @@ public class DrawGUI extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("img/logo.png"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		drawingContainer = new DrawingContainer();
-		scrollpane = new JScrollPane(drawingContainer);
 
-		controller = new DrawingController(this);
+		controller = new DrawingController();
 		tools = new ToolBox(controller);
+
+		MouseListener mouse = new MouseListener(controller,tools);
+		drawingPanel = new DrawingPanel(mouse);
+		mouse.setPanel(drawingPanel);
+
+		scrollpane = new JScrollPane(drawingPanel);
+		controller.setPanel(drawingPanel);
 		controller.newDrawing(new Dimension(500, 380));
 
 		// statusBar = new StatusBar();
@@ -118,9 +92,9 @@ public class DrawGUI extends JFrame {
 	 */
 	public void updateDrawing() {
 
-		drawingContainer.setDrawing(controller.getDrawing());
-		scrollpane.setPreferredSize(new Dimension(drawingContainer
-				.getPreferredSize().width + 100, drawingContainer
+		drawingPanel.setDrawing(controller.getDrawing());
+		scrollpane.setPreferredSize(new Dimension(drawingPanel
+				.getPreferredSize().width + 100, drawingPanel
 				.getPreferredSize().height + 100));
 		pack();
 		repaint();

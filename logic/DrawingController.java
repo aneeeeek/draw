@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
+import gui.DrawingPanel;
 import shapes.Shape;
 import actions.AddAction;
 import actions.ColorAction;
@@ -25,15 +26,17 @@ public class DrawingController {
 
 	private UndoManager undoManager;
 	private Selection selection;
-	private DrawGUI gui;
 	private Tool tool;
+	public DrawingPanel panel;
 
-	public DrawingController(DrawGUI g) {
+	public DrawingController() {
 		drawing = null;
 		undoManager = new UndoManager();
 		selection = new Selection();
-		gui = g;
 		tool = Tool.LINE;
+	}
+	public void setPanel(DrawingPanel panel){
+		this.panel=panel;
 	}
 
 	public void addShape(Shape s) {
@@ -55,7 +58,7 @@ public class DrawingController {
 		DrawAction del = new DeleteAction(drawing, selection);
 		del.execute();
 		undoManager.addAction(del);
-		drawing.repaint();
+		panel.repaint();
 	}
 
 	public Drawing getDrawing() {
@@ -80,16 +83,17 @@ public class DrawingController {
 
 	public void newDrawing(Dimension size) {
 		drawing = new Drawing(size);
-		if (gui != null) {
-			gui.updateDrawing();
-		}
+		//if (gui != null) {
+			//gui.updateDrawing();
+		//}
+		panel.setDrawing(drawing);
 	}
 
 	public void redo() {
 		if (this.undoManager.canRedo()) {
 			this.undoManager.redo();
 		}
-		drawing.repaint();
+		panel.repaint();
 	}
 
 	public void selectAll() {
@@ -97,7 +101,7 @@ public class DrawingController {
 		for (Shape sh : drawing) {
 			selection.add(sh);
 		}
-		drawing.repaint();
+		panel.repaint();
 
 	}
 
@@ -115,6 +119,6 @@ public class DrawingController {
 		if (this.undoManager.canUndo()) {
 			this.undoManager.undo();
 		}
-		drawing.repaint();
+		panel.repaint();
 	}
 }
