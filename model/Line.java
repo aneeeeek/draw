@@ -1,4 +1,4 @@
-package shapes;
+package model;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;

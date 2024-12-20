@@ -1,7 +1,8 @@
 package gui;
 
-import logic.Drawing;
-import shapes.Shape;
+import model.Drawing;
+import model.DrawingListener;
+import model.Shape;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.awt.*;
  *
  */
 
-public class DrawingPanel extends JPanel {
+public class DrawingPanel extends JPanel implements DrawingListener {
 
     private Drawing drawing;
 
@@ -30,6 +31,8 @@ public class DrawingPanel extends JPanel {
     public void setDrawing(Drawing d) {
         this.drawing=d;
         this.setPreferredSize(d.getCanvasSize());
+        drawing.addListener(this);
+        //drawing.getSelection().addListener(this);
     }
 
     public void paintComponent(Graphics g) {
@@ -42,4 +45,28 @@ public class DrawingPanel extends JPanel {
         }
     }
 
+    @Override
+    public void when_addedShape(Shape shape) {
+        repaint();
+    }
+
+    @Override
+    public void when_deletedShape(Shape shape) {
+        repaint();
+    }
+
+    @Override
+    public void when_editedShape(Shape shape) {
+        repaint();
+    }
+
+    @Override
+    public void when_selectedShape(Shape shape) {
+        repaint();
+    }
+
+    @Override
+    public void when_deselectedShape(Shape shape) {
+        repaint();
+    }
 }

@@ -1,13 +1,16 @@
-package logic;
+package model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import shapes.Shape;
-
-public class Selection implements Iterable<Shape> {
+public class Selection implements Iterable<Shape>, DrawingListener {
 
 	private ArrayList<Shape> selected;
+	private List<DrawingListener> listeners = new ArrayList<>();
+	public void addListener(DrawingListener listener){
+		listeners.add(listener);
+	}
 
 	public Selection() {
 		selected = new ArrayList<Shape>(0);
@@ -21,6 +24,7 @@ public class Selection implements Iterable<Shape> {
 		if (!selected.contains(s)) {
 			selected.add(s);
 			s.setSelected(true);
+			listeners.forEach(listener -> listener.when_selectedShape(s));
 		}
 	}
 
@@ -37,6 +41,7 @@ public class Selection implements Iterable<Shape> {
 	public void empty() {
 		for (Shape s : selected) {
 			s.setSelected(false);
+			listeners.forEach(listener -> listener.when_deselectedShape(s));
 		}
 		selected.clear();
 	}

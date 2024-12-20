@@ -1,8 +1,8 @@
-package actions;
+package controller;
 
-import logic.Selection;
-import shapes.FillableShape;
-import shapes.Shape;
+import model.Selection;
+import model.FillableShape;
+import model.Shape;
 
 /**
  * FillAction implements a undoable action where the fill status of all the

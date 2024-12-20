@@ -1,4 +1,4 @@
-package shapes;
+package model;
 
 import java.awt.Font;
 import java.awt.Graphics;

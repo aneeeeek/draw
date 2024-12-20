@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 
-import logic.DrawingController;
+import controller.DrawingController;
 
 /**
  * Graphical user interface for the Drawing editor "Draw"
@@ -65,7 +65,6 @@ public class DrawGUI extends JFrame {
 
 		MouseListener mouse = new MouseListener(controller,tools);
 		drawingPanel = new DrawingPanel(mouse);
-		mouse.setPanel(drawingPanel);
 
 		scrollpane = new JScrollPane(drawingPanel);
 		controller.setPanel(drawingPanel);

@@ -1,10 +1,12 @@
-package shapes;
+package model;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Shape {
 
@@ -14,6 +16,14 @@ public abstract class Shape {
 	protected Color color;
 	protected double strokeWidth;
 	protected boolean selected;
+	protected List<DrawingListener> listeners = new ArrayList<>();
+	public void addListener(DrawingListener listener){
+		listeners.add(listener);
+	}
+
+	public void removeListener(List<DrawingListener> listener){
+		listeners.removeAll(listener);
+	}
 
 	public Shape(Point p) {
 		point1 = p;
@@ -104,22 +114,27 @@ public abstract class Shape {
 		point1.y = point1.y + y;
 		point2.x = point2.x + x;
 		point2.y = point2.y + y;
+		listeners.forEach(listener -> listener.when_editedShape(this));
 	}
 
 	public void setColor(Color c) {
 		color = c;
+		listeners.forEach(listener -> listener.when_editedShape(this));
 	}
 
 	public void setPoint1(Point p) {
 		this.point1 = p;
+		listeners.forEach(listener -> listener.when_editedShape(this));
 	}
 
 	public void setPoint2(Point p) {
 		this.point2 = p;
+		listeners.forEach(listener -> listener.when_editedShape(this));
 	}
 
 	public void setSelected(boolean b) {
 		selected = b;
+		listeners.forEach(listener -> listener.when_editedShape(this));
 	}
 
 	public String toString() {

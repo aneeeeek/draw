@@ -1,4 +1,4 @@
-package shapes;
+package model;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
@@ -36,6 +36,7 @@ public abstract class FillableShape extends Shape {
 
 	public void setFilled(boolean f) {
 		filled = f;
+		listeners.forEach(listener -> listener.when_editedShape(this));
 	}
 
 	public String toString() {

@@ -1,9 +1,9 @@
-package actions;
+package controller;
 
 import java.awt.Point;
 
-import logic.Selection;
-import shapes.Shape;
+import model.Selection;
+import model.Shape;
 
 /**
  * MoveAction implements a single undoable action where all the Shapes in a

@@ -12,8 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import logic.DrawIO;
-import logic.DrawingController;
+import controller.DrawIO;
+import controller.DrawingController;
 
 /**
  * Listens to actions from the buttons in a menu and modifies the Drawing
@@ -52,13 +52,12 @@ public class MenuListener implements ActionListener {
 		}
 
 		else if (cmd.equals("Select all")) {
-			controller.selectAll();
+			controller.getDrawing().selectAll();
 
 		}
 
 		else if (cmd.equals("Clear selection")) {
-			controller.getSelection().empty();
-			controller.panel.repaint();
+			controller.getDrawing().getSelection().empty();
 		}
 
 		else if (cmd.equals("Delete")) {

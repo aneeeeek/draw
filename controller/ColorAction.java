@@ -1,8 +1,8 @@
-package actions;
+package controller;
 
 import java.awt.Color;
 
-import shapes.Shape;
+import model.Shape;
 
 /**
  * DeleteAction implements a single undoable action where the color of a Shape

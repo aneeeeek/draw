@@ -1,7 +1,7 @@
-package actions;
+package controller;
 
-import logic.Drawing;
-import shapes.Shape;
+import model.Drawing;
+import model.Shape;
 
 /**
  * AddAction implements a single undoable action where a Shape is added to a

@@ -1,8 +1,8 @@
-package actions;
+package controller;
 
-import logic.Drawing;
-import logic.Selection;
-import shapes.Shape;
+import model.Drawing;
+import model.Selection;
+import model.Shape;
 
 /**
  * DeleteAction implements a single undoable action where all Shapes in a given

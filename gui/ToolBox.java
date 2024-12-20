@@ -25,8 +25,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import logic.DrawingController;
-import logic.Tool;
+import controller.DrawingController;
+import controller.Tool;
 
 public class ToolBox extends JToolBar implements ActionListener,
 		ChangeListener, ItemListener {
@@ -53,7 +53,6 @@ public class ToolBox extends JToolBar implements ActionListener,
 					setVisible(false);
 					tb.setColor(colorChooser.getColor());
 					c.colorSelectedShapes(colorChooser.getColor());
-					c.panel.repaint();
 				}
 			});
 			cancelButton.addActionListener(new ActionListener() {
@@ -168,8 +167,7 @@ public class ToolBox extends JToolBar implements ActionListener,
 			c.setTool(Tool.SELECT);
 		}
 		else if (!source.equals(colorbutton)) {
-			c.getSelection().empty();
-			c.panel.repaint();
+			c.getDrawing().getSelection().empty();
 		}
 
 		if (source.equals(circle)) {
@@ -220,8 +218,6 @@ public class ToolBox extends JToolBar implements ActionListener,
 		}
 
 		c.toggleFilled();
-		c.panel.repaint();
-
 	}
 
 	public void setColor(Color c) {

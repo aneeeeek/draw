@@ -1,20 +1,13 @@
-package logic;
-
-import gui.DrawGUI;
+package controller;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
 import gui.DrawingPanel;
-import shapes.Shape;
-import actions.AddAction;
-import actions.ColorAction;
-import actions.DeleteAction;
-import actions.DrawAction;
-import actions.FillAction;
-import actions.MoveAction;
-import actions.UndoManager;
+import model.Drawing;
+import model.Selection;
+import model.Shape;
 
 public class DrawingController {
 
@@ -25,14 +18,13 @@ public class DrawingController {
 	}
 
 	private UndoManager undoManager;
-	private Selection selection;
+
 	private Tool tool;
 	public DrawingPanel panel;
 
 	public DrawingController() {
 		drawing = null;
 		undoManager = new UndoManager();
-		selection = new Selection();
 		tool = Tool.LINE;
 	}
 	public void setPanel(DrawingPanel panel){
@@ -43,11 +35,10 @@ public class DrawingController {
 		DrawAction add = new AddAction(drawing, s);
 		add.execute();
 		undoManager.addAction(add);
-
 	}
 
 	public void colorSelectedShapes(Color c) {
-		for (Shape s : selection) {
+		for (Shape s : drawing.getSelection()) {
 			DrawAction col = new ColorAction(s, c);
 			col.execute();
 			undoManager.addAction(col);
@@ -55,18 +46,13 @@ public class DrawingController {
 	}
 
 	public void deleteSelectedShapes() {
-		DrawAction del = new DeleteAction(drawing, selection);
+		DrawAction del = new DeleteAction(drawing, drawing.getSelection());
 		del.execute();
 		undoManager.addAction(del);
-		panel.repaint();
 	}
 
 	public Drawing getDrawing() {
 		return drawing;
-	}
-
-	public Selection getSelection() {
-		return selection;
 	}
 
 	public Tool getTool() {
@@ -74,8 +60,8 @@ public class DrawingController {
 	}
 
 	public void moveSelectedShapes(Point movement) {
-		if (!selection.isEmpty()) {
-			DrawAction move = new MoveAction(selection, movement);
+		if (!drawing.getSelection().isEmpty()) {
+			DrawAction move = new MoveAction(drawing.getSelection(), movement);
 			move.execute();
 			undoManager.addAction(move);
 		}
@@ -83,26 +69,14 @@ public class DrawingController {
 
 	public void newDrawing(Dimension size) {
 		drawing = new Drawing(size);
-		//if (gui != null) {
-			//gui.updateDrawing();
-		//}
 		panel.setDrawing(drawing);
+
 	}
 
 	public void redo() {
 		if (this.undoManager.canRedo()) {
 			this.undoManager.redo();
 		}
-		panel.repaint();
-	}
-
-	public void selectAll() {
-		selection.empty();
-		for (Shape sh : drawing) {
-			selection.add(sh);
-		}
-		panel.repaint();
-
 	}
 
 	public void setTool(Tool t) {
@@ -110,7 +84,7 @@ public class DrawingController {
 	}
 
 	public void toggleFilled() {
-		DrawAction toggle = new FillAction(selection);
+		DrawAction toggle = new FillAction(drawing.getSelection());
 		toggle.execute();
 		undoManager.addAction(toggle);
 	}
@@ -119,6 +93,5 @@ public class DrawingController {
 		if (this.undoManager.canUndo()) {
 			this.undoManager.undo();
 		}
-		panel.repaint();
 	}
 }

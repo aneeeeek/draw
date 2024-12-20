@@ -1,21 +1,18 @@
-package logic;
+package model;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import model.Shape;
 
-import shapes.Shape;
+public class Drawing implements Iterable<Shape>{
 
-public class Drawing implements Iterable<Shape> {
+	private List<DrawingListener> listeners = new ArrayList<>();
 
-	private static final long serialVersionUID = 0;
+	private Selection selection;
 
 	private ArrayList<Shape> shapes;
 
@@ -28,7 +25,17 @@ public class Drawing implements Iterable<Shape> {
 	public Drawing(Dimension size) {
 		shapes = new ArrayList<>(0);
 		canvasSize = size;
+		selection = new Selection();
 	}
+
+	public void addListener(DrawingListener listener){
+		listeners.add(listener);
+		for(Shape s : shapes){
+			s.addListener(listener);
+		}
+		selection.addListener(listener);
+	}
+
 
 //	public BufferedImage getImage() {
 //
@@ -54,6 +61,8 @@ public class Drawing implements Iterable<Shape> {
 
 	public void insertShape(Shape s) {
 		shapes.add(s);
+		listeners.forEach(listener -> s.addListener(listener));
+		listeners.forEach(listener -> listener.when_addedShape(s));
 	}
 
 	@Override
@@ -69,28 +78,19 @@ public class Drawing implements Iterable<Shape> {
 		System.out.println("---");
 	}
 
-	public void lower(Shape s) {
-		int index = shapes.indexOf(s);
-		if (index < shapes.size() - 1) {
-			shapes.remove(s);
-			shapes.add(index, s);
-		}
-	}
-
-	public int nShapes() {
-		return shapes.size();
-	}
-
-	public void raise(Shape s) {
-		int index = shapes.indexOf(s);
-		if (index > 0) {
-			shapes.remove(s);
-			shapes.add(--index, s);
-		}
-	}
-
 	public void removeShape(Shape s) {
 		shapes.remove(s);
+		listeners.forEach(listener -> listener.when_deletedShape(s));
+		s.removeListener(listeners);
 	}
-
+	public Selection getSelection() {
+		return selection;
+	}
+	public void selectAll() {
+		selection.empty();
+		for (Shape sh : this) {
+			selection.add(sh);
+			listeners.forEach(listener -> listener.when_selectedShape(sh));
+		}
+	}
 }

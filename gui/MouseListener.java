@@ -5,14 +5,14 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import logic.DrawingController;
-import logic.Tool;
-import shapes.Circle;
-import shapes.FillableShape;
-import shapes.Line;
-import shapes.Rectangle;
-import shapes.Shape;
-import shapes.Text;
+import controller.DrawingController;
+import controller.Tool;
+import model.Circle;
+import model.FillableShape;
+import model.Line;
+import model.Rectangle;
+import model.Shape;
+import model.Text;
 
 /**
  * MouseListener listens to the mouse events in a drawing and modifies the
@@ -37,11 +37,6 @@ public class MouseListener extends MouseAdapter {
 
 	private Shape newShape;
 
-	public void setPanel(DrawingPanel panel) {
-		this.panel = panel;
-	}
-
-	private DrawingPanel panel;
 
 	/**
 	 * Constructs a new MouseListener
@@ -72,8 +67,6 @@ public class MouseListener extends MouseAdapter {
 			c.moveSelectedShapes(new Point(mouseDelta.x, mouseDelta.y));
 		}
 
-		panel.repaint();
-
 		lastPos = m.getPoint();
 
 	}
@@ -93,18 +86,18 @@ public class MouseListener extends MouseAdapter {
 			Shape tmp = c.getDrawing().getShapeAt(startPos);
 
 			if (((m.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == 0)
-					&& !c.getSelection().contains(tmp)) {
-				c.getSelection().empty();
+					&& !c.getDrawing().getSelection().contains(tmp)) {
+				c.getDrawing().getSelection().empty();
 			}
 
-			if ((tmp != null) && (!c.getSelection().contains(tmp))) {
+			if ((tmp != null) && (!c.getDrawing().getSelection().contains(tmp))) {
 
 				// empty the selection before selecting a new shape if shift is
 				// not down
 
 				tools.setColor(tmp.getColor());
 
-				if ((c.getSelection().isEmpty())
+				if ((c.getDrawing().getSelection().isEmpty())
 						&& (tmp instanceof FillableShape)) {
 					tools.setFill(((FillableShape) tmp).getFilled());
 				}
@@ -113,11 +106,10 @@ public class MouseListener extends MouseAdapter {
 					tools.setFontSize(((Text) tmp).getFont().getSize());
 				}
 
-				c.getSelection().add(tmp);
+				c.getDrawing().getSelection().add(tmp);
 
 			}
 
-			panel.repaint();
 
 		}
 		else if (t == Tool.RECTANGLE) {
@@ -135,7 +127,6 @@ public class MouseListener extends MouseAdapter {
 			}
 			catch (IllegalArgumentException e) {
 			}
-			panel.repaint();
 		}
 
 		if (newShape != null) {
