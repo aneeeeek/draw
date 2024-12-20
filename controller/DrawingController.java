@@ -3,6 +3,8 @@ package controller;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import gui.DrawingPanel;
 import model.Drawing;
@@ -19,17 +21,23 @@ public class DrawingController {
 
 	private UndoManager undoManager;
 
+	private List<ControllerListener> listeners = new ArrayList<>();
+
+	public void addListener(ControllerListener listener){
+		listeners.add(listener);
+	}
+
 	private Tool tool;
-	public DrawingPanel panel;
+	//public DrawingPanel panel;
 
 	public DrawingController() {
 		drawing = null;
 		undoManager = new UndoManager();
 		tool = Tool.LINE;
 	}
-	public void setPanel(DrawingPanel panel){
-		this.panel=panel;
-	}
+	//public void setPanel(DrawingPanel panel){
+		//this.panel=panel;
+	//}
 
 	public void addShape(Shape s) {
 		DrawAction add = new AddAction(drawing, s);
@@ -69,8 +77,9 @@ public class DrawingController {
 
 	public void newDrawing(Dimension size) {
 		drawing = new Drawing(size);
-		panel.setDrawing(drawing);
-
+		//panel.setDrawing(drawing);
+		undoManager.clearUndoManager();
+		listeners.forEach(listener -> listener.when_newDrawing(drawing));
 	}
 
 	public void redo() {

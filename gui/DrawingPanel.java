@@ -1,5 +1,6 @@
 package gui;
 
+import controller.ControllerListener;
 import model.Drawing;
 import model.DrawingListener;
 import model.Shape;
@@ -15,7 +16,7 @@ import java.awt.*;
  *
  */
 
-public class DrawingPanel extends JPanel implements DrawingListener {
+public class DrawingPanel extends JPanel implements DrawingListener, ControllerListener {
 
     private Drawing drawing;
 
@@ -28,9 +29,14 @@ public class DrawingPanel extends JPanel implements DrawingListener {
         addMouseMotionListener(mouse);
     }
 
-    public void setDrawing(Drawing d) {
+    private void setDrawing(Drawing d) {
         this.drawing=d;
         this.setPreferredSize(d.getCanvasSize());
+
+        setMinimumSize(getPreferredSize());
+        setMaximumSize(getPreferredSize());
+        setSize(getPreferredSize());
+
         drawing.addListener(this);
         //drawing.getSelection().addListener(this);
     }
@@ -67,6 +73,12 @@ public class DrawingPanel extends JPanel implements DrawingListener {
 
     @Override
     public void when_deselectedShape(Shape shape) {
+        repaint();
+    }
+
+    @Override
+    public void when_newDrawing(Drawing drawing) {
+        this.setDrawing(drawing);
         repaint();
     }
 }

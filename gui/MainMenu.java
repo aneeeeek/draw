@@ -1,8 +1,12 @@
 package gui;
 
+import controller.ControllerListener;
+import controller.DrawAction;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -24,7 +28,18 @@ import javax.swing.SpinnerNumberModel;
  * @author Alex Lagerstedt
  * 
  */
-public class MainMenu extends JMenuBar {
+public class MainMenu extends JMenuBar implements ControllerListener {
+
+	@Override
+	public void when_undoRedo(Stack<DrawAction> undoStack, Stack<DrawAction> redoStack) {
+		undo.setEnabled(!undoStack.isEmpty());
+		redo.setEnabled(!redoStack.isEmpty());
+	}
+
+//	@Override
+//	public void when_redo(Stack<DrawAction> redoStack) {
+//		redo.setEnabled(!redoStack.isEmpty());
+//	}
 
 	/**
 	 * A dialog that asks the user for the size for a new Drawing.
@@ -110,7 +125,7 @@ public class MainMenu extends JMenuBar {
 
 	private JMenuItem redo;
 
-	public MainMenu(MenuListener listener) {
+	public MainMenu(MenuListener listener){
 
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem newdrawing = new JMenuItem("New", new ImageIcon(
@@ -128,7 +143,9 @@ public class MainMenu extends JMenuBar {
 
 		JMenu editMenu = new JMenu("Edit");
 		undo = new JMenuItem("Undo", new ImageIcon("img/edit-undo.png"));
+		undo.setEnabled(false);
 		redo = new JMenuItem("Redo", new ImageIcon("img/edit-redo.png"));
+		redo.setEnabled(false);
 
 		JMenu selectionMenu = new JMenu("Selection");
 		JMenuItem all = new JMenuItem("Select all", new ImageIcon(

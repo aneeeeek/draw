@@ -1,14 +1,12 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
+import controller.ControllerListener;
 import controller.DrawingController;
+import model.Drawing;
 
 /**
  * Graphical user interface for the Drawing editor "Draw"
@@ -17,7 +15,7 @@ import controller.DrawingController;
  * 
  */
 
-public class DrawGUI extends JFrame {
+public class DrawGUI extends JFrame implements ControllerListener {
 
 
 //	public class StatusBar extends JLabel {
@@ -66,9 +64,16 @@ public class DrawGUI extends JFrame {
 		MouseListener mouse = new MouseListener(controller,tools);
 		drawingPanel = new DrawingPanel(mouse);
 
-		scrollpane = new JScrollPane(drawingPanel);
-		controller.setPanel(drawingPanel);
+		JPanel containerWrapper = new JPanel(new GridBagLayout());
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.weightx = constraints.weighty = 1;
+		containerWrapper.add(drawingPanel, constraints);
+
+		scrollpane = new JScrollPane(containerWrapper);
+		controller.addListener(drawingPanel);
 		controller.newDrawing(new Dimension(500, 380));
+		controller.addListener(this);
 
 		// statusBar = new StatusBar();
 
@@ -77,7 +82,8 @@ public class DrawGUI extends JFrame {
 		// getContentPane().add(statusBar, BorderLayout.SOUTH);
 
 		MenuListener mainMenuListener = new MenuListener(controller);
-		JMenuBar mainMenu = new MainMenu(mainMenuListener);
+		MainMenu mainMenu = new MainMenu(mainMenuListener);
+		controller.getUndoManager().addListener(mainMenu);
 		this.setJMenuBar(mainMenu);
 
 		pack();
@@ -91,11 +97,16 @@ public class DrawGUI extends JFrame {
 	 */
 	public void updateDrawing() {
 
-		drawingPanel.setDrawing(controller.getDrawing());
+		//drawingPanel.setDrawing(controller.getDrawing());
 		scrollpane.setPreferredSize(new Dimension(drawingPanel
 				.getPreferredSize().width + 100, drawingPanel
 				.getPreferredSize().height + 100));
 		pack();
 		repaint();
+	}
+
+	@Override
+	public void when_newDrawing(Drawing drawing) {
+		pack();
 	}
 }

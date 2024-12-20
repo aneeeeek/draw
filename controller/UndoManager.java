@@ -1,5 +1,9 @@
 package controller;
 
+import model.DrawingListener;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -21,13 +25,24 @@ public class UndoManager {
 
 	private Stack<DrawAction> undoStack;
 	private Stack<DrawAction> redoStack;
+	private List<ControllerListener> listeners = new ArrayList<>();
+
+	public void addListener(ControllerListener listener){
+		listeners.add(listener);
+	}
 
 	/**
 	 * Constructs a empty Undo Manager.
 	 */
 	public UndoManager() {
-		this.undoStack = new Stack<DrawAction>();
-		this.redoStack = new Stack<DrawAction>();
+		this.undoStack = new Stack<>();
+		this.redoStack = new Stack<>();
+	}
+	public void clearUndoManager()
+	{
+		undoStack.clear();
+		redoStack.clear();
+		listeners.forEach(listener -> listener.when_undoRedo(undoStack,redoStack));
 	}
 
 	/**
@@ -39,6 +54,7 @@ public class UndoManager {
 	public void addAction(DrawAction action) {
 
 		this.redoStack.clear();
+
 		if (!undoStack.isEmpty()) {
 			DrawAction mergeResult = getLastAction().getIsNeedMerge() ? getLastAction().mergeActions(action) : null;
 
@@ -53,6 +69,8 @@ public class UndoManager {
 		else {
 			this.undoStack.push(action);
 		}
+		listeners.forEach(listener -> listener.when_undoRedo(undoStack,redoStack));
+
 		//System.out.println(undoStack.size());
 		//System.out.println(undoStack.peek() instanceof MoveAction);
 	}
@@ -84,6 +102,7 @@ public class UndoManager {
 		DrawAction action = this.redoStack.pop();
 		action.redo();
 		this.undoStack.push(action);
+		listeners.forEach(listener -> listener.when_undoRedo(undoStack,redoStack));
 	}
 
 	/**
@@ -94,6 +113,7 @@ public class UndoManager {
 		DrawAction action = this.undoStack.pop();
 		action.undo();
 		this.redoStack.push(action);
+		listeners.forEach(listener -> listener.when_undoRedo(undoStack,redoStack));
 	}
 
 	public DrawAction getLastAction(){
