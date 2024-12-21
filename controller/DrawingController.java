@@ -3,6 +3,7 @@ package controller;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,15 +30,34 @@ public class DrawingController {
 
 	private Tool tool;
 	//public DrawingPanel panel;
+	private AskUser askUser;
 
-	public DrawingController() {
+	public DrawingController(AskUser askUser) {
 		drawing = null;
 		undoManager = new UndoManager();
 		tool = Tool.LINE;
+		this.askUser = askUser;
 	}
 	//public void setPanel(DrawingPanel panel){
 		//this.panel=panel;
 	//}
+
+	public void export(){
+		DrawIO io = new DrawIO();
+		File file = askUser.askFile();
+		io.export(file,this);
+	}
+	public void save(){
+		DrawIO io = new DrawIO();
+		File file = askUser.askFile();
+		io.save(file,this);
+	}
+	public void open(){
+		DrawIO io = new DrawIO();
+		File file = askUser.askFile();
+		io.open(file,this);
+	}
+
 
 	public void addShape(Shape s) {
 		DrawAction add = new AddAction(drawing, s);
@@ -75,9 +95,14 @@ public class DrawingController {
 		}
 	}
 
+	public void newDrawing() {
+		newDrawing(askUser.askDrawingSize());
+	}
+
 	public void newDrawing(Dimension size) {
 		drawing = new Drawing(size);
 		//panel.setDrawing(drawing);
+
 		undoManager.clearUndoManager();
 		listeners.forEach(listener -> listener.when_newDrawing(drawing));
 	}

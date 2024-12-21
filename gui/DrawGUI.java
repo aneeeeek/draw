@@ -58,7 +58,7 @@ public class DrawGUI extends JFrame implements ControllerListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-		controller = new DrawingController();
+		controller = new DrawingController(new AskUserDialogue());
 		tools = new ToolBox(controller);
 
 		MouseListener mouse = new MouseListener(controller,tools);
